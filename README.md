@@ -2,47 +2,6 @@
 
 A full-stack application for reporting and tracking crimes with user authentication and image upload capabilities.
 
-## 🚨 Critical Fixes Applied
-
-### Backend Fixes
-
-1. **✅ Added Slug Field to Post Model**
-   - Added `slug` field to post schema with auto-generation middleware
-   - Slugs are generated from `crimeType` and `crimeLocation` with timestamp
-   - Fixed 404 errors when accessing posts via URLs
-
-2. **✅ Fixed Inconsistent Field Names**
-   - Standardized user model to use `firstname`/`lastname` consistently
-   - Updated signup route to match model field names
-   - Fixed user registration failures
-
-3. **✅ Added JWT_SECRET Environment Variable**
-   - Created `.env` file with required environment variables
-   - Added proper JWT configuration for authentication
-   - Fixed authentication failures
-
-4. **✅ Fixed Upload Directory Path**
-   - Changed from relative to absolute path using `path.join(__dirname, '..', 'uploads')`
-   - Added `recursive: true` for directory creation
-   - Fixed file upload failures
-
-5. **✅ Added Missing Delete Post Endpoint**
-   - Added `DELETE /api/delete-post/:slug` route
-   - Includes authorization checks to ensure users can only delete their own posts
-   - Fixed delete functionality
-
-### Frontend Fixes
-
-6. **✅ Fixed Authentication Method**
-   - Changed from `Authorization: Bearer` headers to `credentials: "include"`
-   - Updated all API calls to use cookie-based authentication
-   - Fixed authentication issues
-
-7. **✅ Fixed Slug Usage**
-   - Updated PostCard to use `slug` instead of `_id` for routing
-   - Fixed Post.jsx to find posts by `slug`
-   - Updated EditPost links to use `slug`
-
 ## 🛠️ Setup Instructions
 
 ### Prerequisites
