@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { login } from "../store/authSlice";
 
-const BASE_URL = "http://localhost:8080"; // Hardcoded to avoid VITE issue
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SignUp = () => {
   const {
@@ -69,10 +69,10 @@ const SignUp = () => {
                 label="First Name:"
                 type="text"
                 placeholder="Enter your first name"
-                {...register("firstName", { required: "First name is required" })}
+                {...register("firstname", { required: "First name is required" })}
               />
-              {errors.firstName && (
-                <p className="text-sm text-red-600">{errors.firstName.message}</p>
+              {errors.firstname && (
+                <p className="text-sm text-red-600">{errors.firstname.message}</p>
               )}
             </div>
 
@@ -81,10 +81,10 @@ const SignUp = () => {
                 label="Last Name:"
                 type="text"
                 placeholder="Enter your last name"
-                {...register("lastName", { required: "Last name is required" })}
+                {...register("lastname", { required: "Last name is required" })}
               />
-              {errors.lastName && (
-                <p className="text-sm text-red-600">{errors.lastName.message}</p>
+              {errors.lastname && (
+                <p className="text-sm text-red-600">{errors.lastname.message}</p>
               )}
             </div>
 

@@ -11,7 +11,7 @@ const UsersPosts = () => {
 
   useEffect(() => {
     if (userData && userData._id && allPosts.length > 0) {
-      const filtered = allPosts.filter((post) => post.userId === userData._id);
+      const filtered = allPosts.filter((post) => post.userId && (post.userId._id === userData._id));
       setUserPosts(filtered);
     }
   }, [allPosts, userData]);

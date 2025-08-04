@@ -15,15 +15,13 @@ const EditPost = () => {
     const fetchPost = async () => {
       try {
         const res = await fetch(`${API_BASE}/api/post/${slug}`, {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
+          credentials: "include",
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          setPost(data.post);
+          setPost(data);
         } else {
           console.error(data.message || "Post not found");
           navigate("/");

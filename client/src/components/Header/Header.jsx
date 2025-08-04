@@ -40,7 +40,7 @@ const Header = () => {
   };
 
   return (
-    <header className="py-3 shadow bg-gray-500 ">
+    <header className="py-3 shadow bg-white border-b border-gray-200">
       <Container>
         <nav className="flex justify-between">
           <div className="mr-4">
@@ -57,11 +57,11 @@ const Header = () => {
                   to={item.slug}
                   className={({ isActive }) =>
                     `${
-                      isActive ? "text-white hover:text-black" : "text-black "
+                      isActive ? "text-blue-600" : "text-gray-600 hover:text-gray-900"
                     }`
                   }
                 >
-                  <li className="sm:inline-block hidden px-6 py-2 duration-200 hover:bg-blue-100 rounded-full">
+                  <li className="sm:inline-block hidden px-6 py-2 duration-200 hover:bg-gray-100 rounded-full">
                     {item.name}
                   </li>
                 </NavLink>
@@ -90,11 +90,11 @@ const Header = () => {
                   to={item.slug}
                   className={({ isActive }) =>
                     `${
-                      isActive ? "text-white hover:text-black" : "text-black "
+                      isActive ? "text-blue-600" : "text-gray-600 hover:text-gray-900"
                     }`
                   }
                 >
-                  <li className="p-3 duration-200 hover:bg-blue-100 rounded-full">
+                  <li className="p-3 duration-200 hover:bg-gray-100 rounded-full">
                     {item.name}
                   </li>
                 </NavLink>

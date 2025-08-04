@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Input } from "../index";
-import { addPost, updatePost } from "../../store/postSlice";
+import { addPost, updatePost, setPost } from "../../store/postSlice";
 
 const PostForm = ({ post }) => {
   const { register, handleSubmit } = useForm({
@@ -44,7 +44,12 @@ const PostForm = ({ post }) => {
         postData = await response.json();
 
         if (response.ok) {
-          dispatch(updatePost(postData.post));
+          // Refetch all posts to update Redux state
+          const postsRes = await fetch(`${API_BASE}/api/posts`, { credentials: "include" });
+          if (postsRes.ok) {
+            const postsData = await postsRes.json();
+            dispatch(setPost(Array.isArray(postsData) ? postsData : postsData.posts));
+          }
           navigate(`/post/${postData.post.slug}`);
         } else {
           setError(postData.message || "Failed to update post");

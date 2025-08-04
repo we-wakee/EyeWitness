@@ -22,7 +22,7 @@ app.use(cors({
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Connect DB and start server
 connectDB()

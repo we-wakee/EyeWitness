@@ -22,9 +22,7 @@ function Home() {
     const fetchPosts = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/posts`, {
-          headers: {
-            Authorization: `Bearer ${userData?.token}`,
-          },
+          credentials: "include",
         });
 
         if (!response.ok) throw new Error("Failed to fetch posts");
@@ -47,7 +45,7 @@ function Home() {
       }
     };
 
-    if (userData?.token) {
+    if (userData) {
       fetchPosts();
     } else {
       setLoading(false); // avoid infinite loading if user not logged in

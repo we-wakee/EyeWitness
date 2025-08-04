@@ -13,30 +13,45 @@ export default function Post() {
   const dispatch = useDispatch();
 
   const userData = useSelector((state) => state.auth.userData);
-  const isAuthor = post && userData ? post.userId === userData._id : false;
+  const isAuthor = post && userData ? post.userId._id === userData._id : false;
 
   const allPosts = useSelector((state) => state.post.posts);
 
   useEffect(() => {
-    if (slug) {
-      const matchedPost = allPosts.find((p) => p._id === slug);
-      if (matchedPost) {
-        setPost(matchedPost);
+    const fetchPost = async () => {
+      if (slug) {
+        try {
+          const res = await fetch(`${BASE_URL}/api/post/${slug}`, {
+            credentials: "include",
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            setPost(data);
+          } else {
+            console.error("Post not found");
+            navigate("/");
+          }
+        } catch (err) {
+          console.error("Error fetching post:", err.message);
+          navigate("/");
+        }
       } else {
         navigate("/");
       }
-    } else {
-      navigate("/");
-    }
-  }, [slug, navigate, allPosts]);
+    };
+
+    fetchPost();
+  }, [slug, navigate, BASE_URL]);
 
   const deletePost = async () => {
+    const confirmed = window.confirm("Are you sure you want to delete this post? This action cannot be undone.");
+    if (!confirmed) return;
+    
     try {
-      const res = await fetch(`${BASE_URL}/api/posts/${post._id}`, {
+      const res = await fetch(`${BASE_URL}/api/delete-post/${post.slug}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
+        credentials: "include",
       });
 
       if (!res.ok) throw new Error("Failed to delete post");
@@ -50,8 +65,8 @@ export default function Post() {
 
   return post ? (
     <div className="py-8 max-w-5xl m-auto rounded-xl">
-      <h1 className="text-xl text-center text-gray-600 pb-4">
-        <span className="font-bold">Posted By:</span> {post.userName}
+      <h1 className="text-xl text-center text-gray-700 pb-4">
+        <span className="font-bold text-gray-900">Posted By:</span> {post.userId ? `${post.userId.firstname} ${post.userId.lastname}` : 'Unknown User'}
       </h1>
       <Container>
         <div className="w-full text-center grid gap-3 sm:flex mb-2 sm:relative p-2">
@@ -65,12 +80,12 @@ export default function Post() {
 
           {isAuthor && (
             <div className="text-center mt-2 sm:absolute sm:right-6 sm:top-6">
-              <Link to={`/edit-post/${post._id}`}>
-                <Button bgColor="bg-green-500" className="mr-3">
+              <Link to={`/edit-post/${post.slug}`}>
+                <Button className="mr-3 bg-green-600 hover:bg-green-700 text-white">
                   Edit
                 </Button>
               </Link>
-              <Button bgColor="bg-red-500" onClick={deletePost}>
+              <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={deletePost}>
                 Delete
               </Button>
             </div>
@@ -78,7 +93,7 @@ export default function Post() {
         </div>
 
         <div className="w-full mb-6">
-          <h1 className="text-2xl font-bold text-center">
+          <h1 className="text-2xl font-bold text-center text-gray-900">
             {post.crimeType} ({post.crimeLocation})
           </h1>
         </div>

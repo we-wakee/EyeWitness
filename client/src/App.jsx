@@ -19,7 +19,7 @@ const App = () => {
       if (!response.ok) throw new Error("Not logged in");
 
       const data = await response.json();
-      dispatch(login({ userData: data }));
+      dispatch(login(data));
     } catch (err) {
       dispatch(logout());
       console.error("User fetch error:", err.message);
@@ -33,7 +33,7 @@ const App = () => {
   }, []);
 
   return !loading ? (
-    <div className="min-h-screen flex flex-wrap content-between bg-gray-300 font-rubik">
+    <div className="min-h-screen flex flex-wrap content-between bg-gray-50 font-rubik">
       <div className="w-full block">
         <Header />
         <main>
@@ -43,7 +43,7 @@ const App = () => {
       </div>
     </div>
   ) : (
-    <div className="min-h-screen flex flex-wrap content-between bg-gray-300 font-rubik">
+    <div className="min-h-screen flex flex-wrap content-between bg-gray-50 font-rubik">
       <div className="w-full block">
         <Header />
         <main>

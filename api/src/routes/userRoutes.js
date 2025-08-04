@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/signup', async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstname, lastname, email, password } = req.body;
 
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -18,8 +18,8 @@ router.post('/signup', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new userModel({
-      firstname: firstName,
-      lastname: lastName,
+      firstname,
+      lastname,
       email,
       password: hashedPassword
     });
@@ -34,7 +34,7 @@ router.post('/signup', async (req, res) => {
 
     res.status(201).json({ message: "User signed up successfully" });
   } catch (err) {
-    res.status(400).send("ERROR: " + err.message);
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -58,9 +58,9 @@ router.post('/login', async (req, res) => {
   sameSite: "Lax",         // ✅ Lax works fine for dev
   maxAge: 24 * 60 * 60 * 1000, // 1 day
 });
-    res.send("User Logged in successfully");
+    res.json({ message: "User Logged in successfully" });
   } catch (err) {
-    res.status(400).send("ERROR: " + err.message);
+    res.status(400).json({ message: err.message });
   }
 });
 

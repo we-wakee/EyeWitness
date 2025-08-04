@@ -22,6 +22,13 @@ const postSchema = new mongoose.Schema({
     required: false, // will be filename from multer
   },
 
+  slug: {
+    type: String,
+    required: false,
+    unique: true,
+    sparse: true, // Allow multiple null values
+  },
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -32,6 +39,21 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+// Pre-save middleware to generate slug
+postSchema.pre('save', function(next) {
+  // Always generate a slug if it doesn't exist or if crimeType/crimeLocation changed
+  if (!this.slug || this.isModified('crimeType') || this.isModified('crimeLocation')) {
+    const baseSlug = `${this.crimeType}-${this.crimeLocation}`.toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    
+    this.slug = `${baseSlug}-${Date.now()}`;
+  }
+  next();
 });
 
 const Post = mongoose.model('Post', postSchema);

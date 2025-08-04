@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/posts', authMiddleware, async (req, res) => {
   try {
     const posts = await Post.find()
-      .populate('userId', 'email')
+      .populate('userId', 'firstname lastname email')
       .sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
@@ -30,7 +30,8 @@ router.get('/all-posts', authMiddleware, async (req, res) => {
 // Get single post by slug
 router.get('/post/:slug', async (req, res) => {
   try {
-    const post = await Post.findOne({ slug: req.params.slug });
+    const post = await Post.findOne({ slug: req.params.slug })
+      .populate('userId', 'firstname lastname email');
     if (!post) return res.status(404).json({ message: 'Post not found' });
     res.json(post);
   } catch (err) {
@@ -55,7 +56,7 @@ router.post('/add-post', authMiddleware, upload.single('crimeImage'), async (req
     await newPost.save();
     res.status(201).json({ message: 'Post created', post: newPost });
   } catch (err) {
-    console.error(err);
+    console.error('Error creating post:', err);
     res.status(500).json({ message: 'Failed to create post' });
   }
 });
@@ -85,6 +86,28 @@ router.put('/edit-post/:slug', authMiddleware, upload.single('crimeImage'), asyn
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to update post' });
+  }
+});
+
+// Delete post
+router.delete('/delete-post/:slug', authMiddleware, async (req, res) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug });
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    // Check if user owns the post
+    if (post.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Unauthorized - You can only delete your own posts' });
+    }
+
+    await Post.findByIdAndDelete(post._id);
+    res.json({ message: 'Post deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to delete post' });
   }
 });
 
