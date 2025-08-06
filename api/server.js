@@ -1,11 +1,11 @@
 const express = require('express');
 require('dotenv').config();
-const connectDB = require('./config/database');
+const connectDB = require('./src/config/database');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
-const userRoutes = require('./routes/userRoutes');
-const postRoutes = require('./routes/postRoutes');
+const userRoutes = require('./src/routes/userRoutes');
+const postRoutes = require('./src/routes/postRoutes');
 
 const app = express();
 
